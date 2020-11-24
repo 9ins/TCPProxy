@@ -1,0 +1,27 @@
+!!org.chaostocosmos.net.tcp.Config
+adminAddress: localhost
+adminPassword: admin
+adminPort: 3030
+adminUser: admin
+proxyServicePort: 6060
+sessionMapping:
+  InnoQuartz:
+    allowedHosts: [192.168.1.16]
+    soTimeout: 0
+    keepAlive: true
+    password: admin
+    receiveBufferSize: 0
+    remoteHost: prod.innoquartz.net:9090
+    sendBufferSize: 0
+    tcpNoDelay: true
+    user: admin
+  Oracle:
+    allowedHosts: [192.168.1.16]
+    keepAlive: true
+    password: admin
+    soTimeout: 0
+    receiveBufferSize: 0
+    remoteHost: 192.168.1.157:1521
+    sendBufferSize: 0
+    tcpNoDelay: true
+    user: admin
