@@ -8,6 +8,8 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.SocketException;
 import java.net.UnknownHostException;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * 
@@ -23,8 +25,9 @@ class ProxySession implements Runnable {
 	Thread thread;
 	Config config;
 	SessionMapping sessionMapping;
-	InteractiveChannel receiveThread, sendThread;
 	Logger logger;
+	Map<String, InteractiveChannel> sendChannelMap;
+	Map<String, InteractiveChannel> receiveChannelMap;
 	
 	/**
 	 * Constructor
@@ -36,6 +39,8 @@ class ProxySession implements Runnable {
 		this.sessionName = sessionName;
 		this.config = config;
 		this.sessionMapping = config.getSessionMapping(sessionName);
+		this.sendChannelMap = new HashMap<String, InteractiveChannel>();
+		this.receiveChannelMap = new HashMap<String, InteractiveChannel>();
 		this.logger = Logger.getInstance();
 	}
 	
@@ -82,8 +87,10 @@ class ProxySession implements Runnable {
 	 * @throws InterruptedException 
 	 */
 	public void close() throws IOException, InterruptedException {
-		this.sendThread.close();
-		this.receiveThread.close();
+		for(int i=0; i<sendChannelMap.size(); i++) {
+			sendChannelMap.get(i).close();
+			receiveChannelMap.get(i).close();
+		}
 	}
 	
 	/**
@@ -104,26 +111,40 @@ class ProxySession implements Runnable {
 	
 	@Override
 	public void run() {
-		try {
 			logger.info("["+sessionName+"] Proxy server waiting [Port] : "+sessionMapping.getProxyPort()+"   Target: "+sessionMapping.getRemoteHost());
-			ServerSocket proxyServer = new ServerSocket(this.sessionMapping.getProxyPort(), 100, InetAddress.getByName(this.config.getProxyHost()));
+			ServerSocket proxyServer = null;
+			try {
+				proxyServer = new ServerSocket(this.sessionMapping.getProxyPort(), 100, InetAddress.getByName(this.config.getProxyHost()));
+			} catch (IOException e) {
+				logger.throwable(e);
+			}
 			while(!this.isDone) {
-				Socket socket = proxyServer.accept();
-				if(sessionMapping.getAllowedHosts().size() == 0 || sessionMapping.getAllowedHosts().stream().anyMatch(h -> h.equals(socket.getLocalAddress().getHostAddress()))) {
-					Socket clientSocket = applySocketConfig(socket, sessionMapping);				
-					Socket remoteSocket = createRemoteSocket(sessionMapping);
-					receiveThread = new InteractiveChannel(sessionName+"-Receive", clientSocket, remoteSocket);
-					sendThread = new InteractiveChannel(sessionName+"-Send", remoteSocket, clientSocket);
-				} else {
-					String err = "Not allowed host connected: "+socket.getLocalAddress().getHostAddress();
-					logger.info(err);
-					socket.getOutputStream().write(err.getBytes());
-					socket.close();
+				try {
+					Socket socket = proxyServer.accept();
+					if(config.isForbiddenHost(sessionMapping.getRemoteHost(), sessionMapping.getRemotePort())) {
+						String err = "Forbidden remote host request detected: "+sessionMapping.getRemoteHost()+":"+sessionMapping.getRemotePort();
+						logger.info(err);
+						socket.getOutputStream().write(err.getBytes());
+						socket.close();
+					} else {
+						if(sessionMapping.getAllowedHosts().size() == 0 || sessionMapping.getAllowedHosts().stream().anyMatch(h -> h.equals(socket.getLocalAddress().getHostAddress()))) {
+							Socket clientSocket = applySocketConfig(socket, sessionMapping);				
+							Socket remoteSocket = createRemoteSocket(sessionMapping);
+												
+							sendChannelMap.put(clientSocket.getRemoteSocketAddress().toString(), new InteractiveChannel(sessionName+"-Send", clientSocket, remoteSocket));
+							receiveChannelMap.put(clientSocket.getRemoteSocketAddress().toString(), new InteractiveChannel(sessionName+"-Receive", remoteSocket, clientSocket));
+							logger.info("["+sessionName+"] Session channels(send/receive) is managed. Client: "+clientSocket.getRemoteSocketAddress().toString());
+						} else {
+							String err = "Not allowed host connected: "+socket.getLocalAddress().getHostAddress();
+							logger.info(err);
+							socket.getOutputStream().write(err.getBytes());
+							socket.close();
+						}
+					}
+				} catch(Exception ioe) {
+					Logger.getInstance().throwable(ioe);
 				}
 			}
-		} catch(Exception ioe) {
-			Logger.getInstance().throwable(ioe);
-		}
 	}
 
 	/**

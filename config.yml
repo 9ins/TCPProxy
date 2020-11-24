@@ -2,6 +2,7 @@
 adminPassword: null
 adminPort: 9393
 adminUser: null
+forbiddenRemote: [192.168.1.157:*]
 proxyHost: localhost
 sessionMapping:
   InnoQuartz:
@@ -17,7 +18,7 @@ sessionMapping:
   Oracle:
     allowedHosts: [192.168.1.1, 127.0.0.1]
     keepAlive: true
-    proxyPort: 5555
+    proxyPort: 1521
     receiveBufferSize: 0
     remoteHost: 192.168.1.157
     remotePort: 1521
@@ -27,7 +28,7 @@ sessionMapping:
   MySQL:
     allowedHosts: [192.168.1.2, 127.0.0.1]
     keepAlive: true
-    proxyPort: 2323
+    proxyPort: 9336
     receiveBufferSize: 0
     remoteHost: 192.168.1.157
     remotePort: 9336
