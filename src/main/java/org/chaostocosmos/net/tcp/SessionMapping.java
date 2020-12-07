@@ -2,22 +2,36 @@ package org.chaostocosmos.net.tcp;
 
 import java.io.Serializable;
 import java.lang.reflect.Field;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
+/**
+ * 
+ * SessionMapping
+ *
+ * @author 9ins
+ * 2020. 11. 30.
+ */
 public class SessionMapping implements Serializable {
-	public String password;
-	public List<String> allowedHosts;
-	public int proxyPort;
-	public String remoteHost;
-	public int remotePort;
-	public boolean tcpNoDelay;
-	public boolean keepAlive;
-	public int soTimeout;
-	public int sendBufferSize;
-	public int receiveBufferSize;
+	private List<String> allowedHosts = new ArrayList<>();
+	private boolean keepAlive;
+	private boolean tcpNoDelay;
+	private String proxyBindAddress;
+	private int proxyPort;
+	private List<String> remoteHosts = new ArrayList<>();
+	private String sessionMode;
+	private String loadBalanceRatio;
+	private int standAloneRetry;
+	private int bufferSize;
+	private int connectionTimeout;
+	private int soTimeout;	
+	
+	private SESSION_MODE sessionModeEnum;
+	private Map<String, Float> loadBalanceRatioMap;
 	
 	SessionMapping() {}
 	
@@ -29,31 +43,6 @@ public class SessionMapping implements Serializable {
 		}
 		return map;
 	}
-	
-	public SessionMapping(List<String> allowedHosts, int proxyPort, String remoteHost, int remotePort, boolean tcpNoDelay, boolean keepAlive, int soTimeout, int sendBufferSize, int receiveBufferSize) {
-		super();
-		this.allowedHosts = allowedHosts;
-		this.proxyPort = proxyPort;
-		this.remoteHost = remoteHost;
-		this.remotePort = remotePort;
-		this.tcpNoDelay = tcpNoDelay;
-		this.keepAlive = keepAlive;
-		this.soTimeout = soTimeout;
-		this.sendBufferSize = sendBufferSize;
-		this.receiveBufferSize = receiveBufferSize;
-	}
-	
-	public boolean isAllowedHost(String host) {
-		return this.allowedHosts.stream().anyMatch(h -> h.equals(host));
-	}
-
-	public String getPassword() {
-		return password;
-	}
-
-	public void setPassword(String password) {
-		this.password = password;
-	}
 
 	public List<String> getAllowedHosts() {
 		return allowedHosts;
@@ -61,38 +50,6 @@ public class SessionMapping implements Serializable {
 
 	public void setAllowedHosts(List<String> allowedHosts) {
 		this.allowedHosts = allowedHosts;
-	}
-
-	public int getProxyPort() {
-		return proxyPort;
-	}
-
-	public void setProxyPort(int proxyPort) {
-		this.proxyPort = proxyPort;
-	}
-
-	public String getRemoteHost() {
-		return remoteHost;
-	}
-
-	public void setRemoteHost(String remoteHost) {
-		this.remoteHost = remoteHost;
-	}
-
-	public int getRemotePort() {
-		return remotePort;
-	}
-
-	public void setRemotePort(int remotePort) {
-		this.remotePort = remotePort;
-	}
-
-	public boolean isTcpNoDelay() {
-		return tcpNoDelay;
-	}
-
-	public void setTcpNoDelay(boolean tcpNoDelay) {
-		this.tcpNoDelay = tcpNoDelay;
 	}
 
 	public boolean isKeepAlive() {
@@ -103,35 +60,142 @@ public class SessionMapping implements Serializable {
 		this.keepAlive = keepAlive;
 	}
 
+	public boolean isTcpNoDelay() {
+		return tcpNoDelay;
+	}
+
+	public void setTcpNoDelay(boolean tcpNoDelay) {
+		this.tcpNoDelay = tcpNoDelay;
+	}
+
+	public String getProxyBindAddress() {
+		return proxyBindAddress;
+	}
+
+	public void setProxyBindAddress(String proxyBindAddress) {
+		this.proxyBindAddress = proxyBindAddress;
+	}
+
+	public int getProxyPort() {
+		return proxyPort;
+	}
+
+	public void setProxyPort(int proxyPort) {
+		this.proxyPort = proxyPort;
+	}
+
+	public List<String> getRemoteHosts() {
+		return remoteHosts;
+	}
+	public int getBufferSize() {
+		return bufferSize;
+	}
+
+	public void setBufferSize(int bufferSize) {
+		this.bufferSize = bufferSize;
+	}
+
+	public int getConnectionTimeout() {
+		return connectionTimeout;
+	}
+
+	public void setConnectionTimeout(int connectionTimeout) {
+		this.connectionTimeout = connectionTimeout;
+	}
+
 	public int getSoTimeout() {
 		return soTimeout;
 	}
 
 	public void setSoTimeout(int soTimeout) {
 		this.soTimeout = soTimeout;
+	}	
+
+	public int getStandAloneRetry() {
+		return standAloneRetry;
 	}
 
-	public int getSendBufferSize() {
-		return sendBufferSize;
+	public void setStandAloneRetry(int standAloneRetry) {
+		this.standAloneRetry = standAloneRetry;
 	}
 
-	public void setSendBufferSize(int sendBufferSize) {
-		this.sendBufferSize = sendBufferSize;
+	public SESSION_MODE getSessionModeEnum() {
+		return sessionModeEnum;
+	}
+	
+	public String getLoadBalanceRatio() {
+		return this.loadBalanceRatio;
 	}
 
-	public int getReceiveBufferSize() {
-		return receiveBufferSize;
+	public void setSessionModeEnum(SESSION_MODE sessionModeEnum) {
+		this.sessionModeEnum = sessionModeEnum;
 	}
 
-	public void setReceiveBufferSize(int receiveBufferSize) {
-		this.receiveBufferSize = receiveBufferSize;
+	public void setLoadBalanceRatioMap(Map<String, Float> loadBalanceRatioMap) {
+		this.loadBalanceRatioMap = loadBalanceRatioMap;
+	}
+
+	public void setRemoteHosts(List<String> remoteHosts) {
+		this.remoteHosts = remoteHosts;
+	}
+
+	public void setSessionMode(String sessionMode) {
+		this.sessionMode = sessionMode;
+	}
+
+	public void setLoadBalanceRatio(String loadBalanceRatio) {
+		this.loadBalanceRatio = loadBalanceRatio;
+	}
+
+	public SESSION_MODE getSessionMode() throws ConfigException {
+		if(sessionMode.equalsIgnoreCase("SA")) {
+			return SESSION_MODE.STAND_ALONE;
+		} else if(sessionMode.equalsIgnoreCase("HA_FO")) {
+			return SESSION_MODE.HA_FAIL_OVER;
+		} else if(sessionMode.equalsIgnoreCase("HA_FB"))	{
+			return SESSION_MODE.HA_FAIL_BACK;
+		} else if(sessionMode.equalsIgnoreCase("LB_LR")) {		
+			return SESSION_MODE.LOAD_BALANCE_ROUND_ROBIN;
+		} else if(sessionMode.equalsIgnoreCase("LB_SR")) {
+			return SESSION_MODE.LOAD_BALANCE_SEPARATE_RATIO;
+		} else {
+			try {
+				return SESSION_MODE.valueOf(sessionMode);
+			} catch(Exception e) {
+				throw new ConfigException("remoteMode", "remoteMOde must be among STAND_ALONE/HA_FAIL_OVER/HA_FAIL_BACK/LOAD_BALANCE_ROUND_ROBIN/LOAD_BALANCE_SEPARATE_RATIO.");
+			}
+		}
+	}
+
+	public Map<String, Float> getLoadBalanceRatioMap() {
+		Map<String, Float> map = new HashMap<>();
+		List<Float> ratioList = Arrays.asList(loadBalanceRatio.split(":")).stream().map(f -> Float.parseFloat(f)).collect(Collectors.toList());
+		float sum = 0.0f;
+		for(Float f : ratioList) {
+			sum += f;
+			if(sum > 100f) {
+				f = 100f - (sum - f);
+			}
+			if(remoteHosts.size() > 0) {
+				String remote = remoteHosts.remove(0);
+				map.put(remote, f);
+			}
+		}
+		if(remoteHosts.size() > 0) {
+			for(String remote : remoteHosts) {
+				map.put(remote, 0f);
+			}
+		}
+		return map;
 	}
 
 	@Override
 	public String toString() {
-		return "SessionMapping [password=" + password + ", allowedHosts=" + allowedHosts
-				+ ", proxyPort=" + proxyPort + ", remoteHost=" + remoteHost + ", remotePort=" + remotePort
-				+ ", tcpNoDelay=" + tcpNoDelay + ", keepAlive=" + keepAlive + ", soTimeout=" + soTimeout
-				+ ", sendBufferSize=" + sendBufferSize + ", receiveBufferSize=" + receiveBufferSize + "]";
+		return "SessionMapping [allowedHosts=" + allowedHosts + ", keepAlive=" + keepAlive + ", tcpNoDelay="
+				+ tcpNoDelay + ", proxyBindAddress=" + proxyBindAddress + ", proxyPort=" + proxyPort + ", remoteHosts="
+				+ remoteHosts + ", sessionMode=" + sessionMode + ", loadBalanceRatio=" + loadBalanceRatio
+				+ ", standAloneRetry=" + standAloneRetry + ", bufferSize=" + bufferSize + ", connectionTimeout="
+				+ connectionTimeout + ", soTimeout=" + soTimeout + ", sessionModeEnum=" + sessionModeEnum
+				+ ", loadBalanceRatioMap=" + loadBalanceRatioMap + "]";
 	}
 }

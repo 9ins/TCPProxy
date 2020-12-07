@@ -91,8 +91,8 @@ public class ProxySessionHandler {
 	 * @throws InterruptedException 
 	 * @throws IOException 
 	 */
-	public void closeSession(String sessionName) throws IOException, InterruptedException {
-		this.sessionMap.get(sessionName).close();
+	public void closeAllSession(String sessionName) throws IOException, InterruptedException {
+		this.sessionMap.get(sessionName).closeSessions();
 	}
 	
 	/**
@@ -102,7 +102,7 @@ public class ProxySessionHandler {
 	 */
 	public void closeAllSessions() throws IOException, InterruptedException {
 		for(ProxySession session : this.sessionMap.values()) {
-			session.close();
+			session.closeSessions();
 		}
 	}
 	

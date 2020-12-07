@@ -105,7 +105,7 @@ public class TCPProxy implements AdminCommandListener {
 	 */
 	public void closeAllSession() throws IOException, InterruptedException {
 		for(ProxySession session : this.sessionMap.values()) {
-			session.close();
+			session.closeSessions();
 		}
 	}
 	

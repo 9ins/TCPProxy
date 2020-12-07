@@ -79,14 +79,6 @@ public class AdminCommand {
 		this.restartProxy = restartProxy;
 	}
 
-	public void setSessionHost(boolean restartServerSocket, String sessionName, int newPort) {
-		this.restartServerSocket = restartServerSocket;
-		this.config.getSessionMapping().entrySet().stream().filter(e -> e.getKey().equals(sessionName)).forEach(en -> {
-			en.getValue().setRemoteHost(sessionName);
-			en.getValue().setRemotePort(newPort);
-		});
-	}
-
 	public void setUpdateConfig(boolean updateConfig, Config config) {
 		this.updateConfig = updateConfig;
 		this.config = config;

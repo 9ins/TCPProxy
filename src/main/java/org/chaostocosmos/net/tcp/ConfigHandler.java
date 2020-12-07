@@ -68,19 +68,21 @@ public class ConfigHandler {
 	 */
 	private ConfigHandler(Path configPath) throws FileNotFoundException {
 		this.configPath = configPath;		
-		loadConfig();
+		loadConfig();		
 		
 		/*
 		this.config = new Config();
 		Map<String, SessionMapping> map = new HashMap<>();
+		
 		SessionMapping sm = new SessionMapping();
-		sm.setAllowedHosts(new ArrayList<String>());
-		map.put("InnoQuartz", sm);
+		map.put("MySQL", sm);
 		SessionMapping sm1 = new SessionMapping();
-		sm1.setAllowedHosts(new ArrayList<String>());
 		map.put("Oracle", sm1);
+		SessionMapping sm2 = new SessionMapping();
+		map.put("Kafka", sm2);
+		
 		this.config.setSessionMapping(map);
-		*/		
+		*/
 	}
 	
 	/**
@@ -90,7 +92,7 @@ public class ConfigHandler {
 	public void loadConfig() throws FileNotFoundException {
 		loadConfig(this.configPath);
 	}
-	
+	 
 	/**
 	 * Load config.yml
 	 * @param configPath
@@ -155,8 +157,8 @@ public class ConfigHandler {
 			if(entry.getValue().getRemoteHost() == null) {
 				throw new IllegalArgumentException("Remote target host not specified in config.yml. Please check session part: "+entry.getKey());
 			}
-			if(entry.getValue().getRemotePort() == 0) {
-				throw new IllegalArgumentException("Can't use the specified port for remote port: "+entry.getValue().getRemotePort()+"  Check session part: "+entry.getKey());
+			if(entry.getValue().getRemoteHost().size() < 1) {
+				throw new IllegalArgumentException("Remote host and port must be exist one or more in config.yml. SESSION: "+entry.getKey());
 			}
 			if(entry.getValue().getProxyPort() == 0) {
 				throw new IllegalArgumentException("TCPProxy server port must be defined a number except 0.  Check session part: "+entry.getKey());

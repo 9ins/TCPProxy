@@ -2,6 +2,8 @@ package org.chaostocosmos.net.tcp;
 
 import java.io.Serializable;
 import java.net.InetSocketAddress;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -11,12 +13,10 @@ public class Config implements Serializable {
 	private String adminPassword;
 	private String proxyHost;
 	private int adminPort;
-	private List<String> forbiddenRemote;
-	private Map<String, SessionMapping> sessionMapping;
+	private List<String> forbiddenRemote = new ArrayList<>();
+	private Map<String, SessionMapping> sessionMapping = new HashMap<>();
 	
-	Config() {
-		
-	}
+	Config() {}
 	
 	public String getAdminUser() {
 		return adminUser;
@@ -45,11 +45,9 @@ public class Config implements Serializable {
 	public List<String> getForbiddenRemote() {
 		return forbiddenRemote;
 	}
-
 	public void setForbiddenRemote(List<String> forbiddenRemote) {
 		this.forbiddenRemote = forbiddenRemote;
 	}
-
 	public  Map<String, SessionMapping> getSessionMapping() {
 		return sessionMapping;
 	}
@@ -61,6 +59,9 @@ public class Config implements Serializable {
 	}
 	public boolean isForbiddenHost(InetSocketAddress socketAddr) {
 		return isForbiddenHost(socketAddr.getHostName(), socketAddr.getPort());
+	}
+	public boolean isForbiddenHost(String hostPort) {
+		return isForbiddenHost(hostPort.substring(0, hostPort.lastIndexOf(":")), Integer.parseInt(hostPort.substring(hostPort.lastIndexOf(":")+1)));
 	}
 	public boolean isForbiddenHost(String host, int port) {
 		System.out.println("HOST NAME: "+host+"   "+port);			
