@@ -13,9 +13,9 @@ Also can make Stand-Alone, HA or Load-Balanced Architecture with behinding your 
 ## Structure
 ---  
 ![structure_image](./image/tcpproxy-structure.png)  
-TCPProxy is run on JVM. It consist of proxy Main Frame, Thread Pool, Sessions for services and configuration YAML config file.  
-The Main Frame part perform to manage Each Sessions and Configuration. A Session charged to interact between clients and remotes(servers) is worked with a specified mode of session. e.g. STAND_ALONE, HIGI_AVAILABLE_FAIL_OVER, HIGI_AVAILABLE_FAIL_BACK, LOAD_BALANCE_ROUND_ROBIN, LOAD_BALANCE_SEPARATE_RATIO. Each Sessions have a Thread Pool to process client's requests which is needed to interct with remotes(or servers).  
-Actual transporting is processed at Channel in Session, Also it is worked as a thread with two way as send and receive Channel.  
+TCPProxy is run on JVM. It consist of proxy main frame, thread pool, sessions for services and configuration YAML config file.  
+The main frame part performs to manage each Sessions and configuration. A session be charged to interact between clients and remotes(servers) is worked with a session mode specified in config.yml. e.g. STAND_ALONE, HIGI_AVAILABLE_FAIL_OVER, HIGI_AVAILABLE_FAIL_BACK, LOAD_BALANCE_ROUND_ROBIN, LOAD_BALANCE_SEPARATE_RATIO. Each sessions have a thread pool to process client's requests which is needed to interct with remotes(or servers).  
+Actual transporting is processed at a channel in Session, Also it is worked as a thread with two way as send and receive channel.  
 
 
 
