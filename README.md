@@ -15,6 +15,7 @@ Also can make Stand-Alone, HA or Load-Balanced Architecture with behinding your 
 ![structure_image](./image/tcpproxy-structure.png)  
 
 
+![structure1_image](./image/tcpproxy-structure1.png)  
 
 
 ![stand-alone_image](./image/stand-alone.png)  
