@@ -13,3 +13,15 @@ Also can make Stand-Alone, HA or Load-Balanced Architecture with behinding your 
 ## Structure
 ---
 ![structure_image](./image/tcpproxy-structure.png)  
+
+
+
+
+![stand-alone_image](./image/stand-alone.png)  
+
+
+![ha_image](./image/ha.png)  
+
+
+![load-balanced_image](./image/load-balanced.png)  
+
