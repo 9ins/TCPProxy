@@ -16,8 +16,8 @@ sessionMapping:
     keepAlive: false
     proxyBindAddress: localhost
     proxyPort: 1212
-    remoteHosts: [192.168.1.157:9335, 192.168.1.157:9336]
-    sessionMode: HIGI_AVAILABLE_FAIL_OVER
+    remoteHosts: [192.168.1.157:1521]
+    sessionMode: STAND_ALONE
     standAloneRetry: 3
     loadBalanceRatio: 
     failedCircularRetry: 3
@@ -52,10 +52,10 @@ sessionMapping:
     keepAlive: false
     proxyBindAddress: localhost
     proxyPort: 1214
-    remoteHosts: [192.168.1.157:1522, 192.168.1.155:9090, 192.168.1.157:1521]
-    sessionMode: LOAD_BALANCE_ROUND_ROBIN
+    remoteHosts: [192.168.1.157:1522, 192.168.1.155:9090, 192.168.1.157:1521, 192.168.1.157:1521]
+    sessionMode: LOAD_BALANCE_SEPARATE_RATIO
     standAloneRetry: 3
-    loadBalanceRatio: 
+    loadBalanceRatio: 10:20:30:50
     failedCircularRetry: 6
     soTimeout: 0
     tcpNoDelay: false
