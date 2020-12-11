@@ -16,9 +16,16 @@ Also can make Stand-Alone, HA or Load-Balanced Architecture at front of your ser
 ---  
 ![structure_image](./image/tcpproxy-structure.png)  
 TCPProxy is run on JVM. It consist of proxy main frame, thread pool, sessions for services and configuration YAML config file.  
-The main frame part performs to manage each Sessions and configuration. A session be charged to interact between clients and remotes(servers) is worked with a session mode specified in config.yml. e.g. STAND_ALONE, HIGI_AVAILABLE_FAIL_OVER, HIGI_AVAILABLE_FAIL_BACK, LOAD_BALANCE_ROUND_ROBIN, LOAD_BALANCE_SEPARATE_RATIO.  
+The main frame part performs to manage each Sessions and configuration. A session be charged to interact between clients and remotes(servers) is worked with a session mode specified in config.yml. 
 Each sessions have a thread pool to process client's requests which is needed to interct with remotes(or servers).  
 Actual transporting is processed at a channel in Session, Also it is worked as a thread with two way as send and receive channel.  
+
+### Session mode  
+1. STAND_ALONE - A session for stand-alone remote(server). This mode contribute to only one remote target. See more to bottom of document.
+2. HIGI_AVAILABLE_FAIL_OVER - A session for HA(High-Available) structure. With this mode, user can compose HA Fail-Over architecture. if all remote fail, service is to be over.
+3. HIGI_AVAILABLE_FAIL_BACK - A session for HA(High-Available) Fail-Back architecture. if failed Master be alived, service will be recovered.
+4. LOAD_BALANCE_ROUND_ROBIN - A session for Load-Balance service with the way of Round-Robin algorithm. user can compose cluster back-end with this mode of TCPProxy.
+5. LOAD_BALANCE_SEPARATE_RATIO - A session for Load-Balance service with the way of assigned ratio. This mode can control throughput of requests to each remote target.
 
 ![structure1_image](./image/tcpproxy-structure1.png)  
 TCPProxy can allow a lot of clients and can manage various kind of sessions.  
