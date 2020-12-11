@@ -9,7 +9,7 @@ It is based on TCP Socket layer transportation which is usually used in most App
 The TCPProxy is written by Java but It can support most TCP connection of a Application written with any programming language.  
 It's very working simple, instinctive, performanceful. Most of user can easily set configuration, deloying, execution.  
 You can construct secure entry point proxy to connect spawn of servers with TCPProxy.  
-Also can make Stand-Alone, HA or Load-Balanced Architecture with behinding your servers.  
+Also can make Stand-Alone, HA or Load-Balanced Architecture at front of your servers.  
 
 
 ## Structure
