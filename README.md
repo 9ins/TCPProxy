@@ -4,8 +4,7 @@
 
 
 ## Instroduction
-TCPProxy is Open Source Project that can contributes to relay TCP connection or being role of Stalend-Alone / HA / Load-Balanced Cluster Proxy Server.  
-It is based on TCP Socket layer transportation which is usually used in most Application / Web / OS / Device of present day.  
+TCPProxy is Open Source Project that can contributes to relay TCP connection or being role of Stalend-Alone / HA / Load-Balanced Cluster Proxy Server. It is based on TCP Socket layer transportation which is usually used in most Application / Web / OS / Device of present day.  
 The TCPProxy is written by Java but It can support most TCP connection of a Application written with any programming language.  
 It's very working simple, instinctive, performanceful. Most of user can easily set configuration, deloying, execution.  
 You can construct secure entry point proxy to connect spawn of servers with TCPProxy.  
