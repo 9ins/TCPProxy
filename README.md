@@ -20,11 +20,11 @@ Each sessions have a thread pool to process client's requests which is needed to
 Actual transporting is processed at a channel in Session, Also it is worked as a thread with two way as send and receive channel.  
 
 ### Session mode  
-1. STAND_ALONE - A session for stand-alone remote(server). This mode contribute to only one remote target. See more to bottom of document.
-2. HIGI_AVAILABLE_FAIL_OVER - A session for HA(High-Available) structure. With this mode, user can compose HA Fail-Over architecture. if all remote fail, service is to be over.
-3. HIGI_AVAILABLE_FAIL_BACK - A session for HA(High-Available) Fail-Back architecture. if failed Master be alived, service will be recovered.
-4. LOAD_BALANCE_ROUND_ROBIN - A session for Load-Balance service with the way of Round-Robin algorithm. user can compose cluster back-end with this mode of TCPProxy.
-5. LOAD_BALANCE_SEPARATE_RATIO - A session for Load-Balance service with the way of assigned ratio. This mode can control throughput of requests to each remote target.
+**1. STAND_ALONE - A session for stand-alone remote(server). This mode contribute to only one remote target. See more to bottom of document.
+**2. HIGI_AVAILABLE_FAIL_OVER - A session for HA(High-Available) structure. With this mode, user can compose HA Fail-Over architecture. if all remote fail, service is to be over.
+**3. HIGI_AVAILABLE_FAIL_BACK - A session for HA(High-Available) Fail-Back architecture. if failed Master be alived, service will be recovered.
+**4. LOAD_BALANCE_ROUND_ROBIN - A session for Load-Balance service with the way of Round-Robin algorithm. user can compose cluster back-end with this mode of TCPProxy.
+**5. LOAD_BALANCE_SEPARATE_RATIO - A session for Load-Balance service with the way of assigned ratio. This mode can control throughput of requests to each remote target.
 
 ![structure1_image](./image/tcpproxy-structure1.png)  
 TCPProxy can allow a lot of clients and can manage various kind of sessions.  
@@ -103,7 +103,7 @@ sessionMapping:
 
 1. Stand-Alone session mode  
 Stand-Alone mode provide to relay client connections to single remote or server. As it can relay a connection, user can connect a not direct connected remote with this session mode. For example, User can request to remote RDBMS which couldn't reach direct being caused by firewall, security reason by this session.  
-In General, client and remote is single pair structue and if remote host connection be failed, it can retry to connect to remote with *standAloneRetry* session configuration.  
+In General, client and remote is single pair structue and if remote host connection be failed, it can retry to connect to remote with ***standAloneRetry*** session configuration.  
 
 ![stand-alone_image](./image/stand-alone.png)  
 
@@ -119,7 +119,7 @@ And in fail-back method, if the Master be failed, Slave be going to work alterna
 3. Load-Balance session mode
 User can compose a service with multiple remotes or servers like Cluster Service. Also user can configurate various options about this session mode.  
 Basically, Load-Balance mode provide two way of working method to apply request distribution algorithm. One method is Round-Robin and the other is Assigned-Ratio. Round-Robin is process client requests to assign remotes through equality rate sequentially. If remote be failed on it's turn, next assigned remote be working alternatively.  
-Assigned-Ratio is processing clients requests to assign remotes through specified on *loadBalanceRatio* in config. User can set particular ratio at each remote and doing do, each remote can be working with specified ratio. Even if it's able to have different capacity of remote hosts, this option can let them being working efficiently.
+Assigned-Ratio is processing clients requests to assign remotes through specified on ***loadBalanceRatio*** in config. User can set particular ratio at each remote and doing do, each remote can be working with specified ratio. Even if it's able to have different capacity of remote hosts, this option can let them being working efficiently.
 
 ![load-balanced_image](./image/load-balanced.png)  
 
