@@ -20,11 +20,11 @@ Each sessions have a thread pool to process client's requests which is needed to
 Actual transporting is processed at a channel in Session, Also it is worked as a thread with two way as send and receive channel.  
 
 ### Session mode  
-**1. STAND_ALONE - A session for stand-alone remote(server). This mode contribute to only one remote target. See more to bottom of document.**  
-**2. HIGI_AVAILABLE_FAIL_OVER - A session for HA(High-Available) structure. With this mode, user can compose HA Fail-Over architecture. if all remote fail, service is to be over.**  
-**3. HIGI_AVAILABLE_FAIL_BACK - A session for HA(High-Available) Fail-Back architecture. if failed Master be alived, service will be recovered.**  
-**4. LOAD_BALANCE_ROUND_ROBIN - A session for Load-Balance service with the way of Round-Robin algorithm. user can compose cluster back-end with this mode of TCPProxy.**  
-**5. LOAD_BALANCE_SEPARATE_RATIO - A session for Load-Balance service with the way of assigned ratio. This mode can control throughput of requests to each remote target.**  
+**1. STAND_ALONE** - A session for stand-alone remote(server). This mode contribute to only one remote target. See more to bottom of document.   
+**2. HIGI_AVAILABLE_FAIL_OVER** - A session for HA(High-Available) structure. With this mode, user can compose HA Fail-Over architecture. if all remote fail, service is to be over.    
+**3. HIGI_AVAILABLE_FAIL_BACK** - A session for HA(High-Available) Fail-Back architecture. if failed Master be alived, service will be recovered.    
+**4. LOAD_BALANCE_ROUND_ROBIN** - A session for Load-Balance service with the way of Round-Robin algorithm. user can compose cluster back-end with this mode of TCPProxy.    
+**5. LOAD_BALANCE_SEPARATE_RATIO** - A session for Load-Balance service with the way of assigned ratio. This mode can control throughput of requests to each remote target.    
 
 ![structure1_image](./image/tcpproxy-structure1.png)  
 TCPProxy can allow a lot of clients and can manage various kind of sessions.  
