@@ -118,7 +118,8 @@ And in fail-back method, if the Master be failed, Slave be going to work alterna
 
 3. Load-Balance session mode
 User can compose a service with multiple remotes or servers like Cluster Service. Also user can configurate various options about this session mode.  
-Basically, Load-Balance mode provide two way of working method to apply request distribution algorithm. One method is Round-Robin and the other is Assigning-Ratio. Round-Robin is process client requests to remotes 
+Basically, Load-Balance mode provide two way of working method to apply request distribution algorithm. One method is Round-Robin and the other is Assigned-Ratio. Round-Robin is process client requests to assign remotes through equality rate sequentially. If remote be failed on it's turn, next assigned remote be working alternatively.  
+Assigned-Ratio is processing clients requests to assign remotes through specified on *loadBalanceRatio* in config. User can set particular ratio at each remote and doing do, each remote can be working with specified ratio. Even if it's able to have different capacity of remote hosts, this option can let them being working efficiently.
 
 ![load-balanced_image](./image/load-balanced.png)  
 
