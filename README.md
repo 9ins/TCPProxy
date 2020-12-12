@@ -98,15 +98,27 @@ sessionMapping:
 ```
 
 
-## Configuration for each session mode
+## How to work on session mode
 ---  
+
+1. Stand-Alone session mode  
+Stand-Alone mode provide to relay client connections to single remote or server. As it can relay a connection, user can connect a not direct connected remote with this session mode. For example, User can request to remote RDBMS which couldn't reach direct being caused by firewall, security reason by this session.  
+In General, client and remote is single pair structue and if remote host connection be failed, it can retry to connect to remote with *standAloneRetry* session configuration.  
+
 ![stand-alone_image](./image/stand-alone.png)  
 
 
+2. HA(High-Available) session mode
+HA mode provide two way of working method to support High-Available service. User can compose HA service architecture with this mode.  
+One is Fail-Over, the other is Fail-Back. All of method should be to have Master and Slave remote. In Fail-Over method, Ones the Master be failed, Slave be going to work alternatively and when if Slave would be failed also, the service will be disabled.  
+And in fail-back method, if the Master be failed, Slave be going to work alternatively and then if Master is back to be recovered, the service will be continued on Master.  
 
 ![ha_image](./image/ha.png)  
 
 
+3. Load-Balance session mode
+User can compose a service with multiple remotes or servers like Cluster Service. Also user can configurate various options about this session mode.  
+Basically, Load-Balance mode provide two way of working method to apply request distribution algorithm. One method is Round-Robin and the other is Assigning-Ratio. Round-Robin is process client requests to remotes 
 
 ![load-balanced_image](./image/load-balanced.png)  
 
