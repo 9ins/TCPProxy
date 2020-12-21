@@ -1,7 +1,10 @@
-# TCPProxy v1.0.0
+# TCPProxy v1.1.0
 ---  
 ![title_image](./image/tcp.png)  
 
+## Notification
+---
+On working that TCPProxy management GUI is based on ReactJS. To launch at Feb, 2021.
 
 ## Instroduction
 TCPProxy is Open Source Project that can contributes to relay TCP connection or being role of Stalend-Alone / HA / Load-Balanced Cluster Proxy Server. It is based on TCP Socket layer transportation which is usually used in most Application / Web / OS / Device of present day.  
