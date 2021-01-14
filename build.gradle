@@ -9,12 +9,22 @@ apply plugin: 'java'
 apply plugin: 'eclipse'
 
 sourceCompatibility = 1.8
-version = '1.0.0'
+version = '1.1.1'
+
+sourceSets {
+    main {
+        java { 
+            srcDir 'src/main/java' 
+        }
+    }
+}
+
 jar {
     manifest {
         attributes 'Implementation-Title': 'TCPProxy',
                    'Implementation-Version': version
     }
+    from sourceSets.main.allSource
 	doFirst {
 	    from {
 	        configurations.compile.collect { it.isDirectory() ? it : zipTree(it) }
@@ -42,15 +52,28 @@ repositories {
 
 dependencies {
     // Use JUnit test framework
-    testImplementation 'junit:junit:4.12'
+    testImplementation 'junit:junit:4.12' 
+
+    runtime files('libs/ojdbc6.jar', 'libs/ojdbc6.jar')
+    //runtime fileTree(dir: 'libs', include: '*.jar')    
 
 	// https://mvnrepository.com/artifact/org.yaml/snakeyaml
 	compile group: 'org.yaml', name: 'snakeyaml', version: '1.27'
+    
 	// https://mvnrepository.com/artifact/org.apache.commons/commons-math3
 	compile group: 'org.apache.commons', name: 'commons-math3', version: '3.6.1'
 
-    runtime files('libs/ojdbc6.jar', 'libs/ojdbc6.jar')
-    //runtime fileTree(dir: 'libs', include: '*.jar')
+    // https://mvnrepository.com/artifact/org.eclipse.jetty/jetty-server
+    compile group: 'org.eclipse.jetty', name: 'jetty-server', version: '11.0.0'
+
+    // https://mvnrepository.com/artifact/org.eclipse.jetty/jetty-servlet
+    compile group: 'org.eclipse.jetty', name: 'jetty-servlet', version: '11.0.0'
+
+    // https://mvnrepository.com/artifact/org.eclipse.jetty/jetty-webapp
+    compile group: 'org.eclipse.jetty', name: 'jetty-webapp', version: '11.0.0'
+
+    // https://mvnrepository.com/artifact/org.eclipse.jetty/jetty-util
+    compile group: 'org.eclipse.jetty', name: 'jetty-util', version: '11.0.0'
 }
 
 

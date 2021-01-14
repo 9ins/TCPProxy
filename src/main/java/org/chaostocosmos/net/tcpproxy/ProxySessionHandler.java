@@ -4,10 +4,12 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.UnknownHostException;
-import java.util.AbstractMap;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.stream.Collectors;
+
+import org.chaostocosmos.net.tcpproxy.config.Config;
+import org.chaostocosmos.net.tcpproxy.config.ConfigHandler;
+import org.chaostocosmos.net.tcpproxy.config.SessionMapping;
 
 /**
  * 
@@ -19,10 +21,9 @@ import java.util.stream.Collectors;
 public class ProxySessionHandler {
 	
 	boolean isDone = false;
-	TCPProxy proxy;
 	ConfigHandler configHandler;
 	ServerSocket proxyServer;
-	Thread thread;
+	ProxyThreadPool proxyThreadPool;
 	Map<String, ProxySession> sessionMap;
 	Logger logger;
 	
@@ -33,29 +34,33 @@ public class ProxySessionHandler {
 	 * @throws UnknownHostException
 	 * @throws IOException
 	 */
-	public ProxySessionHandler(TCPProxy proxy) throws FileNotFoundException {
-		this.proxy = proxy;
-		this.configHandler = ConfigHandler.getInstance();
+	public ProxySessionHandler(ConfigHandler configHandler, ProxyThreadPool proxyThreadPool) throws FileNotFoundException {
+		this.configHandler = configHandler;
+		this.proxyThreadPool = proxyThreadPool;
 		this.sessionMap = new HashMap<>();
 		this.logger = Logger.getInstance();
-		createProxySessions(this.configHandler.getConfig());
+		initProxySessions(this.configHandler.getConfig());
 	}
 	
 	/**
 	 * Create proxy sessions
 	 * @param config
 	 */
-	public void createProxySessions(Config config) {
-		String proxyHost = config.getProxyHost();
-		this.sessionMap = config.getSessionMapping().entrySet().stream().map(e -> {
-			ProxySession ps = null;
-			try {
-				ps = new ProxySession(e.getKey(), config);
-			} catch (Exception ex) {
-				ex.printStackTrace();
-			}
-			return new AbstractMap.SimpleEntry<String, ProxySession>(e.getKey(), ps);
-		}).collect(Collectors.toMap(e -> e.getKey(), e -> e.getValue()));
+	public void initProxySessions(Config config) {
+		for(String sessionName : config.getSessionMapping().keySet()) {
+			this.sessionMap.put(sessionName, createProxySession(sessionName, config.getSessionMapping(sessionName)));
+		}
+	}
+
+	/**
+	 * Create proxy session
+	 * @param sessionName
+	 * @param sessionMapping
+	 * @return
+	 */
+	public ProxySession createProxySession(String sessionName, SessionMapping sessionMapping) {		
+		ProxySession ps = new ProxySession(sessionName, sessionMapping, this.proxyThreadPool);
+		return ps;
 	}
 	
 	/**
@@ -71,7 +76,7 @@ public class ProxySessionHandler {
 	 * @throws IOException 
 	 */
 	public void restart() throws IOException, InterruptedException {
-		close();
+		closeAllSessions();
 		start();
 	}
 	
@@ -89,8 +94,8 @@ public class ProxySessionHandler {
 	 * @throws InterruptedException 
 	 * @throws IOException 
 	 */
-	public void closeAllSession(String sessionName) throws IOException, InterruptedException {
-		this.sessionMap.get(sessionName).closeAllSessions(); 
+	public void closeSession(String sessionName) throws IOException, InterruptedException {
+		this.sessionMap.get(sessionName).closeSession();
 	}
 	
 	/**
@@ -100,19 +105,7 @@ public class ProxySessionHandler {
 	 */
 	public void closeAllSessions() throws IOException, InterruptedException {
 		for(ProxySession session : this.sessionMap.values()) {
-			session.closeAllSessions();
+			session.closeSession();
 		}
-	}
-	
-	/**
-	 * Close session server
-	 * @throws IOException 
-	 * @throws InterruptedException 
-	 */
-	public void close() throws IOException, InterruptedException {
-		this.isDone = true;
-		this.proxyServer.close();
-		this.thread.interrupt();
-		this.thread.join();
 	}
 }

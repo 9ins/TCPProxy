@@ -1,11 +1,12 @@
 package org.chaostocosmos.net.tcpproxy;
 
+import org.chaostocosmos.net.tcpproxy.config.Config;
+
 /**
  * 
  * AdminCommand
  *
- * @author 9ins
- * 2020. 11. 18.
+ * @author 9ins 2020. 11. 18.
  */
 public class AdminCommand {
 	

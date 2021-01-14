@@ -10,6 +10,9 @@ import java.net.Socket;
 import java.net.SocketException;
 import java.net.UnknownHostException;
 
+import org.chaostocosmos.net.tcpproxy.config.Config;
+import org.chaostocosmos.net.tcpproxy.config.ConfigHandler;
+
 /**
  * 
  * AdminServerHandler
@@ -22,7 +25,7 @@ public class AdminServerHandler implements Runnable {
 	boolean isDone = false;
 	TCPProxy proxy;
 	ConfigHandler configHandler;
-	ServerSocket adminServer;
+	ServerSocket adminServer; 
 	Socket adminClient;
 	Thread thread;
 	
@@ -42,7 +45,7 @@ public class AdminServerHandler implements Runnable {
 	public void run() {
 		try {
 			while(!this.isDone) {
-				this.adminServer = new ServerSocket(this.configHandler.getAdminPort(), 1, InetAddress.getByName(this.configHandler.getProxyHost()));
+				this.adminServer = new ServerSocket(this.configHandler.getConfig().getManagementPort(), 1, InetAddress.getByName(this.configHandler.getConfig().getManagementAddress()));
 				Socket socket = this.adminServer.accept();
 				if(this.adminClient  ==  null) {
 					this.adminClient = socket;
@@ -70,11 +73,6 @@ public class AdminServerHandler implements Runnable {
 				Object readObject = ois.readObject();
 				if(readObject instanceof Config) {
 					AdminCommand cmd = (AdminCommand)readObject;
-					if(this.configHandler.getAdminUser().equals(cmd.getAdminUser()) && this.configHandler.getAdminPassword().equals(cmd.getAdminPassword())) {
-						this.proxy.dispachConfigChangeEvent(cmd);
-					} else {
-						
-					}
 				} else {
 					throw new SocketException("Admin managing object must be Config or SessionMapping object. "+readObject.toString());
 				}

@@ -1,39 +1,35 @@
-adminPassword: null
-adminPort: 9292
-adminUser: null
-forbiddenRemote: [
-  ]
-proxyHost: localhost
+managementActivation: true
+managementAddress: localhost
+managementPort: 3232
+credentialPath: ./credentials.yml
+proxyThreadPoolCoreSize: 10
+proxyThreadPoolMaxSize: 50
+proxyThreadPoolIdleSecond: 600
+proxyThreadPoolQueueSize: 30
 sessionMapping:
-  MySQL:
+  mysql:
     allowedHosts: [127.0.0.1]
-    threadPoolCoreSize: 10
-    threadPoolMaxSize: 50
-    threadPoolIdleSecond: 600
-    threadPoolQueueSize: 30
+    forbiddenHosts: []
     bufferSize: 0
-    connectionTimeout: 3
+    connectionTimeout: 5
     keepAlive: false
     proxyBindAddress: localhost
-    proxyPort: 1212
-    remoteHosts: [192.168.1.157:1521]
-    sessionMode: STAND_ALONE
+    proxyPort: 9336
+    remoteHosts: [192.168.1.157:9336, 192.168.1.157:9336, 192.168.1.157:9336]
+    sessionMode: LOAD_BALANCE_ROUND_ROBIN
     standAloneRetry: 3
     loadBalanceRatio: 
     failedCircularRetry: 3
     soTimeout: 0
     tcpNoDelay: false
-  Kafka:
+  kafka:
     allowedHosts: [127.0.0.1]
-    threadPoolCoreSize: 10
-    threadPoolMaxSize: 50
-    threadPoolIdleSecond: 600
-    threadPoolQueueSize: 30
+    forbiddenHosts: []
     bufferSize: 0
     connectionTimeout: 0
     keepAlive: false
     proxyBindAddress: localhost
-    proxyPort: 1213
+    proxyPort: 8092
     remoteHosts: [192.168.1.152:8092]
     sessionMode: STAND_ALONE
     standAloneRetry: 3
@@ -41,22 +37,19 @@ sessionMapping:
     failedCircularRetry: 3
     soTimeout: 0
     tcpNoDelay: false
-  Oracle:
+  oracle:
     allowedHosts: [127.0.0.1]
-    threadPoolCoreSize: 10
-    threadPoolMaxSize: 50
-    threadPoolIdleSecond: 600
-    threadPoolQueueSize: 30
+    forbiddenHosts: []
     bufferSize: 0
     connectionTimeout: 3
-    keepAlive: false
+    keepAlive: true
     proxyBindAddress: localhost
-    proxyPort: 1214
-    remoteHosts: [192.168.1.157:1522, 192.168.1.155:9090, 192.168.1.157:1521, 192.168.1.157:1521]
-    sessionMode: LOAD_BALANCE_SEPARATE_RATIO
+    proxyPort: 1521
+    remoteHosts: [192.168.1.157:1521]
+    sessionMode: STAND_ALONE
     standAloneRetry: 3
-    loadBalanceRatio: 10:20:30:50
+    loadBalanceRatio: 
     failedCircularRetry: 6
-    soTimeout: 0
-    tcpNoDelay: false
+    soTimeout: 60000
+    tcpNoDelay: true
 

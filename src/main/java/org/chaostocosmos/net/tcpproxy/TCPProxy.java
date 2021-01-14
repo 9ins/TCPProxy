@@ -8,54 +8,75 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
 import java.util.Map;
-/**  
- * TCPProxy : TCP Proxy 
+
+import org.chaostocosmos.net.tcpproxy.config.ConfigHandler;
+import org.chaostocosmos.net.tcpproxy.credential.CredentialsHandler;
+import org.chaostocosmos.net.tcpproxy.managmenet.ManagementServer;
+
+/**
+ * TCPProxy : TCP Proxy
  * 
- * Description :
- * TCP Proxy 
- * This proxy SW relay TCP Connection between local and remote.
- * Use when you didn't connect remote directly,
- * First, install this proxy at relay host(able to connect to remote)
- * Second, This Proxy must have 'mapping.properties' file.(which program argument) 
- * edit 'mapping.properties' file what you want to mapping to remote host.
- * Third, connect relay host port from your host.
- * finally enjoy to benefit. 
- * when you might ask for something, Don't hesitate to ask by e-mail.(chaos930@gmail.com)
- *  
- * Modification Information  
- *  ---------   ---------   -------------------------------
- *  20180627	9ins		First draft
- *  20201118	9ins		Modify configuration to operate into yaml style. And improve functionalities.
- *  
+ * Description : TCP Proxy This proxy SW relay TCP Connection between local and
+ * remote. Use when you didn't connect remote directly, First, install this
+ * proxy at relay host(able to connect to remote) Second, This Proxy must have
+ * 'mapping.properties' file.(which program argument) edit 'mapping.properties'
+ * file what you want to mapping to remote host. Third, connect relay host port
+ * from your host. finally enjoy to benefit. when you might ask for something,
+ * Don't hesitate to ask by e-mail.(chaos930@gmail.com)
+ * 
+ * Modification Information --------- --------- -------------------------------
+ * 20180627 9ins First draft 20201118 9ins Modify configuration to operate into
+ * yaml style. And improve functionalities.
+ * 
  * @author 9ins
  * @since 20180627
- * @version 1.0 * 
+ * @version 1.0 *
  * @copyright All right reserved by Author
  * @email chaos930@gmail.com
  */
-public class TCPProxy implements AdminCommandListener {	
+public class TCPProxy implements AdminCommandListener {
 
 	public static Path configPath;
+	public static Path credentialPath;
+
+	ManagementServer managementServer;
+	ConfigHandler configHandler;
+	CredentialsHandler credentialsHandler;
 	boolean isDone = false;
 	Logger logger = Logger.getInstance();
 	ServerSocket proxyServer;
 	ServerSocket adminServer;
 	List<AdminCommandListener> configChangeListeners;
-	ProxySessionHandler sessionHandler;
-	AdminServerHandler adminHandler;
 	Map<String, ProxySession> sessionMap;
-	
+	ProxySessionHandler sessionHandler;
+	ProxyThreadPool proxyThreadPool;
+
 	/**
 	 * Constructor
+	 * 
 	 * @param mappingFilename
-	 * @throws IOException
+	 * @throws Exception
 	 */
-	public TCPProxy(String configPath) throws IOException {
+	public TCPProxy(String configPath_) throws Exception {
 		logger.info(SymbolMark.TCPPROXY_MARK);
-		this.configPath = Paths.get(configPath);
-		this.sessionHandler = new ProxySessionHandler(this);
-		this.adminHandler = new AdminServerHandler(this);
+		configPath = Paths.get(configPath_);
+		this.configHandler = ConfigHandler.getInstance(configPath);
+		credentialPath = Paths.get(this.configHandler.getConfig().getCredentialPath());
+		this.credentialsHandler = CredentialsHandler.getInstance(credentialPath);
+		this.proxyThreadPool = new ProxyThreadPool(this.configHandler.getConfig().getProxyThreadPoolCoreSize(), 
+		this.configHandler.getConfig().getProxyThreadPoolMaxSize(), 
+		this.configHandler.getConfig().getProxyThreadPoolIdleSecond(), 
+		this.configHandler.getConfig().getProxyThreadPoolQueueSize());
+		logger.info("[Thread-Pool] Thread Pool initialized. Core size: "+this.configHandler.getConfig().getProxyThreadPoolCoreSize()
+														+" Max size: "+this.configHandler.getConfig().getProxyThreadPoolMaxSize()
+														+" Idle size: "+this.configHandler.getConfig().getProxyThreadPoolIdleSecond()
+														+" Waiting Queue size: "+this.configHandler.getConfig().getProxyThreadPoolQueueSize()
+														);
+		this.sessionHandler = new ProxySessionHandler(this.configHandler, this.proxyThreadPool);
 		this.sessionMap = this.sessionHandler.getProxySessionMap();
+		if(this.configHandler.getConfig().getManagementActivation()) {
+			//this.managementServer = new ManagementServer(this, this.configHandler, this.credentialsHandler);
+		}
 	}
 	
 	/**
@@ -64,7 +85,6 @@ public class TCPProxy implements AdminCommandListener {
 	 * @throws IOException 
 	 */
 	private void restartProxy() throws IOException, InterruptedException {
-		closeAllSession();
 		closeServer();
 		startProxy();
 	}
@@ -76,7 +96,6 @@ public class TCPProxy implements AdminCommandListener {
 	public void startProxy() throws UnknownHostException {
 		Logger.getInstance().info("Start TCP Proxy... Local Host : "+InetAddress.getLocalHost());
 		this.sessionHandler.start();
-		this.adminHandler.start();
 	}
 	
 	/**
@@ -85,8 +104,7 @@ public class TCPProxy implements AdminCommandListener {
 	 * @throws InterruptedException
 	 */
 	public void closeServer() throws IOException, InterruptedException {
-		this.sessionHandler.close();
-		this.adminHandler.close();
+		this.sessionHandler.closeAllSessions();
 	}
 
 	/**
@@ -95,9 +113,31 @@ public class TCPProxy implements AdminCommandListener {
 	 * @throws IOException 
 	 */
 	public void closeAllSession() throws IOException, InterruptedException {
-		for(ProxySession session : this.sessionMap.values()) {
-			session.closeAllSessions();
-		}
+		this.sessionHandler.closeAllSessions();
+	}
+
+	/**
+	 * Get configHandler object
+	 * @return
+	 */
+	public ConfigHandler getConfigHandler() {
+		return this.configHandler;
+	}
+
+	/**
+	 * Get credentials object
+	 * @return
+	 */
+	public CredentialsHandler getCredentialsHandler() {
+		return this.credentialsHandler;
+	}
+
+	/**
+	 * Get proxy session handler
+	 * @return
+	 */
+	public ProxySessionHandler getProxySessionHandler() {
+		return this.sessionHandler;
 	}
 	
 	/**
@@ -133,7 +173,7 @@ public class TCPProxy implements AdminCommandListener {
 	
 	/**
 	 * Dispatch config change event
-	 * @param config
+	 * @param configHandler
 	 */
 	public void dispachConfigChangeEvent(AdminCommand cmd) {
 		this.configChangeListeners.stream().forEach(l -> l.receiveConfigChangeEvnet(new AdminCommandEvent(this, cmd)));
@@ -146,7 +186,6 @@ public class TCPProxy implements AdminCommandListener {
 				restartProxy();
 			} else if(ace.getAdminCommand().isRestartServerSocket()) {
 				this.sessionHandler.restart();
-				this.adminHandler.restart();
 			}
 		} catch(Exception e) {
 			Logger.getInstance().throwable(e);
@@ -159,7 +198,7 @@ public class TCPProxy implements AdminCommandListener {
 	 * @throws IOException
 	 */
 	public static void main(String[] args) throws Exception {
-		if(args.length == 1) {			
+		if(args.length == 1) {
 			TCPProxy proxy = new TCPProxy(args[0]);
 			proxy.startProxy();
 		} else {

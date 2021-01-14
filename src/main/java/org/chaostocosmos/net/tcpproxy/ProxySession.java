@@ -12,13 +12,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
-import java.util.concurrent.ArrayBlockingQueue;
-import java.util.concurrent.BlockingQueue;
-import java.util.concurrent.RejectedExecutionHandler;
-import java.util.concurrent.ThreadPoolExecutor;
-import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
+
+import org.chaostocosmos.net.tcpproxy.config.ConfigException;
+import org.chaostocosmos.net.tcpproxy.config.SessionMapping;
 
 /**
  * 
@@ -26,18 +24,17 @@ import java.util.stream.IntStream;
  *
  * @author 9ins 2020. 11. 18.
  */
-public class ProxySession implements Runnable, RejectedExecutionHandler {
+public class ProxySession implements Runnable {
 
 	boolean isDone = false;
 	String sessionName;
 	Thread thread;
-	Config config;
 	SessionMapping sessionMapping;
 	Logger logger;
 	Map<String, InteractiveChannel> sendChannelMap;
 	Map<String, InteractiveChannel> receiveChannelMap;
-	ThreadPoolExecutor threadPool;
-	BlockingQueue<Runnable> threadQueue;
+	ServerSocket proxyServer;
+	ProxyThreadPool threadPool;
 	boolean standAloneFailed = false;
 	boolean masterSessionFailed = false;
 	boolean slaveSessionFailed = false;
@@ -52,20 +49,14 @@ public class ProxySession implements Runnable, RejectedExecutionHandler {
 	 * @throws IOException
 	 * @throws InterruptedException
 	 */
-	public ProxySession(String sessionName, Config config) {
+	public ProxySession(String sessionName, SessionMapping sm, ProxyThreadPool proxyThreadPool) {
 		this.logger = Logger.getInstance();
-		this.sessionName = sessionName;
-		this.config = config;
-		this.sessionMapping = config.getSessionMapping(sessionName);
+		this.sessionName = sessionName;		
+		this.sessionMapping = sm;
+		this.threadPool = proxyThreadPool;
 		this.sendChannelMap = new HashMap<>();
 		this.receiveChannelMap = new HashMap<>();
 		this.loadBalancedStatus = IntStream.range(0, this.sessionMapping.getRemoteHosts().size()).boxed().map(i -> new AbstractMap.SimpleEntry<Integer, Boolean>(i, true)).collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
-		this.threadQueue = new ArrayBlockingQueue<Runnable>(this.sessionMapping.getThreadPoolQueueSize());
-		this.threadPool = new ThreadPoolExecutor(this.sessionMapping.getThreadPoolCoreSize(),this.sessionMapping.getThreadPoolMaxSize(), this.sessionMapping.getThreadPoolIdleSecond(),	TimeUnit.SECONDS, this.threadQueue, this);		
-		logger.info("[" + sessionName + "] Session is placed.  ThreadPool Core Size: "+ this.sessionMapping.getThreadPoolCoreSize() 
-		+ "  Max Size: " + this.sessionMapping.getThreadPoolMaxSize() 
-		+ "  ThreadPool Maximun: "+ this.sessionMapping.getThreadPoolMaxSize() + "  Idle Seconds : " + this.sessionMapping.getThreadPoolIdleSecond()
-		+ "  Waiting Queue Size: "+this.sessionMapping.getThreadPoolQueueSize());
 	}
 
 	/**
@@ -77,12 +68,22 @@ public class ProxySession implements Runnable, RejectedExecutionHandler {
 	}
 
 	/**
+	 * Close this session
+	 * @throws IOException
+	 * @throws InterruptedException
+	 */
+	public void closeSession() throws IOException, InterruptedException {
+		closeAllChannels();
+		this.proxyServer.close();
+	}
+
+	/**
 	 * Close
 	 * 
 	 * @throws IOException
 	 * @throws InterruptedException
 	 */
-	public void closeAllSessions() throws IOException, InterruptedException {
+	public void closeAllChannels() throws IOException, InterruptedException {
 		for (int i = 0; i < sendChannelMap.size(); i++) {
 			sendChannelMap.get(i).close();
 			receiveChannelMap.get(i).close();
@@ -125,19 +126,10 @@ public class ProxySession implements Runnable, RejectedExecutionHandler {
 	}
 
 	@Override
-	public void rejectedExecution(Runnable r, ThreadPoolExecutor executor) {
-		logger.fatal("[" + ((SessionTask) r).getSessionName()
-				+ "] Session Task is rejected. Please check ThreadPool configuration. ThreadPool active count: "
-				+ executor.getActiveCount() + "  Task count: " + executor.getTaskCount() + "  ThreadPool Maximun: "
-				+ executor.getMaximumPoolSize() + "  Queue size : " + executor.getQueue().size());
-	}
-
-	@Override
 	public void run() {
-		logger.info("[" + sessionName + "] Proxy server waiting [Port] : " + sessionMapping.getProxyPort()	+ "   Target: " + sessionMapping.getRemoteHosts().toString());
-		ServerSocket proxyServer = null;
+		logger.info("[" + sessionName + "] [Session type: "+sessionMapping.getSessionModeEnum().name()+"] Proxy server waiting [Port] : " + sessionMapping.getProxyPort()	+ "   Target: " + sessionMapping.getRemoteHosts().toString());
 		try {
-			proxyServer = new ServerSocket(this.sessionMapping.getProxyPort(), 100,	InetAddress.getByName(this.config.getProxyHost()));
+			this.proxyServer = new ServerSocket(this.sessionMapping.getProxyPort(), 100,	InetAddress.getByName(sessionMapping.getProxyBindAddress()));
 		} catch (IOException e) {
 			logger.throwable(e);
 			return;
@@ -146,7 +138,7 @@ public class ProxySession implements Runnable, RejectedExecutionHandler {
 			try {
 				this.sessionStartMillis = System.currentTimeMillis();
 				Socket client = proxyServer.accept();
-				if (sessionMapping.getRemoteHosts().stream().anyMatch(h -> config.isForbiddenHost(h))) {
+				if (sessionMapping.getRemoteHosts().stream().anyMatch(h -> sessionMapping.isForbiddenHost(h))) {
 					String err = "Forbidden remote host request detected. Forbidden List: " + sessionMapping.getRemoteHosts().toString();
 					logger.info(err);
 					closeSocket(client, err);
@@ -233,8 +225,10 @@ public class ProxySession implements Runnable, RejectedExecutionHandler {
 			try {
 				InteractiveChannel sendChannel = new InteractiveChannel(sessionName+"-Send", client.getInputStream(), remote.getOutputStream(), transactionStartMillis);
 				InteractiveChannel receiveChannel = new InteractiveChannel(sessionName+"-Receive", remote.getInputStream(), client.getOutputStream(), transactionStartMillis);
-				sendChannel.start();
-				receiveChannel.start();
+				//sendChannel.start();
+				//receiveChannel.start();
+				threadPool.execute(sendChannel);
+				threadPool.execute(receiveChannel);
 			} catch(Exception e) {
 				logger.throwable(e);
 				if(remote != null) remote.close();
@@ -278,9 +272,7 @@ public class ProxySession implements Runnable, RejectedExecutionHandler {
 								break;
 							} catch (Exception e) {		
 								standAloneFailed = true;						
-								logger.info("[" + sessionName + "][SESSION MODE: "
-										+ this.sessionMapping.getSessionModeEnum() + "] Retry channel... Interval: "
-										+ Constants.RETRY_INTERVAL + " milliseconds.");
+								logger.info("[" + sessionName + "][SESSION MODE: " + this.sessionMapping.getSessionModeEnum() + "] Retry channel... Interval: "	+ Constants.RETRY_INTERVAL + " milliseconds.");
 							}
 							Thread.sleep(Constants.RETRY_INTERVAL);
 						}
@@ -450,7 +442,7 @@ public class ProxySession implements Runnable, RejectedExecutionHandler {
 				int read;
 				while ((read = this.is.read(buffer)) > 0) {
 					if (total < 1024) {
-						 //System.out.println(new String(buffer));
+						 System.out.println(new String(buffer));
 					}
 					os.write(buffer, 0, read);
 					os.flush();
@@ -459,7 +451,7 @@ public class ProxySession implements Runnable, RejectedExecutionHandler {
 				isDone = true;
 			} catch (IOException e) {
 				//May socket closed. Afterword, the logic might to be modified.
-				//e.printStackTrace();
+				e.printStackTrace();
 			} finally {
 				try {
 					close();

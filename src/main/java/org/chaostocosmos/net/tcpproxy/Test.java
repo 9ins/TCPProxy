@@ -90,6 +90,32 @@ import java.util.stream.IntStream;
             this.y = y;
         }        
     }
+
+
+
+    public static int solution(String[][] clothes) {
+        HashMap<String, Integer> map = new HashMap<>();
+        for(int i=0; i < clothes.length; i++) {
+            if(!map.containsKey(clothes[i][1])) {
+                map.put(clothes[i][1], 1);
+            } else {
+                map.put(clothes[i][1], map.get(clothes[i][1]) + 1);
+            }
+        }        
+        System.out.println(map.toString());
+        int answer = 0;
+        List<Integer> list = new ArrayList<>(map.values());
+        System.out.println("size: "+list.size());
+        int pre = 0;
+        for(int i=0; i<list.size(); i++) {            
+            int val = list.get(i);
+            answer += val;
+            answer += pre * val;
+            System.out.println("val: "+val+"  an: "+answer);
+            pre= val;
+        }
+        return answer;
+    }
      
     public static void main(String[] args) throws InterruptedException {
 
@@ -106,7 +132,6 @@ import java.util.stream.IntStream;
         };
         int num = test.solution(6, edge);
         System.out.println("count: "+num);
-        */
         ArrayList<Map<String, Object>> list = new ArrayList<Map<String, Object>>();
         Map<String, Object> map = new HashMap<String, Object>();
         map.put("1", null);
@@ -117,6 +142,11 @@ import java.util.stream.IntStream;
 
         boolean is = list.contains(map1);
         System.out.println(is);
+        */
+        //String[][] clothes = {{"yellow_hat", "headgear"}, {"blue_sunglasses", "eyewear"}, {"green_turban", "headgear"}};
+        String[][] clothes = {{"crow_mask", "face"}, {"blue_sunglasses", "face"}, {"smoky_makeup", "face"}};
+        int answer = solution(clothes);
+        System.out.println(answer);
     }
 }
 

@@ -3,6 +3,10 @@ package org.chaostocosmos.net.tcpproxy;
 import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.net.Socket;
+
+import org.chaostocosmos.net.tcpproxy.config.ConfigException;
+import org.chaostocosmos.net.tcpproxy.config.SESSION_MODE;
+import org.chaostocosmos.net.tcpproxy.config.SessionMapping;
 /**
  * 
  * ProxySocket
