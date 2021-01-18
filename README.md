@@ -155,8 +155,8 @@ loadBalanceRatio: 10:20:30:50   //You have to define ratios just only as much as
 
 ## How to issue
 ---
-If you have any problem when you were using, or encountered to be met something to improve on TCPProxy, Please let us know using email<chaos930@gmail.com>.  
-Also If you wanna join to contribute TCPProxy, you just write and send your profile email<chaos930@gmail.com> which title is as "Contribution application", So then we will reply result of qualification of contribution to Issue board.
+If you have any problem when you were using, or encountered to be met something to improve on TCPProxy, Please let us know using email <chaos930@gmail.com>.  
+Also If you wanna join to contribute TCPProxy, you just write and send your profile email <chaos930@gmail.com> which title is as "Contribution application", So then we will reply result of qualification of contribution to Issue board.
 
 
 
