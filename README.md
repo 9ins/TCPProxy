@@ -152,3 +152,11 @@ loadBalanceRatio: 10:20:30:50   //You have to define ratios just only as much as
 
 ![load-balanced_image](./image/load-balanced.png)  
 
+
+## How to issue
+---
+If you have any problem when you were using, or encountered to be met something to improve on TCPProxy, Please let us know using Issue board.  
+Also If you wanna join to contribute TCPProxy, you just write your profile on Isuue board which title is as "Contribution application", So then we will reply result of qualification of contribution.
+
+
+
