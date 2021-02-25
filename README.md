@@ -4,7 +4,7 @@
 
 ## Notification
 ---
-- ~~~Dec, 2020 - On working that TCPProxy management GUI is based on ReactJS. Improving management handling. To launch at Feb, 2021.~~~
+- <del>Dec, 2020 - On working that TCPProxy management GUI is based on ReactJS. Improving management handling. To launch at Feb, 2021.</del>
 - Feb 25, 2021 - TCPProxy will be remained as Daemon Application. and It will be going to be React App named as 'Porta' on GitHub at almost last of May.
 
 ## Instroduction
