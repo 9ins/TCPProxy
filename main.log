@@ -21,7 +21,7 @@
 [INFO][Thread:748][20201217165259] [MySQL][SESSION MODE: STAND_ALONE] Client channel connected. /127.0.0.1:59996
 [INFO][Thread:748][20201217165259] [MySQL] new client is connected. Clinet: /127.0.0.1:59996 ------------------- connected.
 [INFO][Thread:748][20201217165259] [MySQL][SESSION MODE: STAND_ALONE] Retry channel... Interval: 3000 milliseconds.
-[INFO][Thread:748][20201217165302] [MySQL][SESSION MODE: STAND_ALONE] Remote channel connected. /192.168.1.152:9022
+[INFO][Thread:748][20201217165302] [MySQL][SESSION MODE: STAND_ALONE] Remote channel connected. /192.168.1.152:9022   
 [INFO][ProxySession$InteractiveChannel:443][20201217165302] [MySQL-Send] Channel Open. 
 [INFO][ProxySession$InteractiveChannel:443][20201217165302] [MySQL-Receive] Channel Open. 
 [INFO][Thread:748][20201217165302] [MySQL][SESSION MODE: STAND_ALONE] Statistics:  Success = 1  Fail = 0
