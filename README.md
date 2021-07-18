@@ -6,7 +6,8 @@
 ---
 - <del>Dec, 2020 - On working that TCPProxy management GUI is based on ReactJS. Improving management handling. To launch at Feb, 2021.</del>
 - <del>Feb 25, 2021 - TCPProxy will be remained as Daemon Application. and It will be going to be React Web App named as 'Porta' on GitHub at almost last of May.</del>
-- July 18, 2021 - Porta would be launching in some future months. It's too delayed up and it's because of hard and tough thing that I faced. All things of this about it is responsibility of author. I am very sorry for this.
+- July 18, 2021 - Porta would be launching in some future months. It's too delayed up and it's because of hard and tough thing that I faced. All things of this about it is responsibility of author. I am very sorry for this. Util latest dev capture is below.
+![porta-capture](./image/porta-capture.PNG)
 
 ## Instroduction
 TCPProxy is Open Source Project that can contributes to relay TCP connection or being role of Stalend-Alone / HA / Load-Balanced Cluster Proxy Server. It is based on TCP Socket layer transportation which is usually used in most Application / Web / OS / Device of present day.  
