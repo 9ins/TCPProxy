@@ -8,7 +8,8 @@
 - <del>Feb 25, 2021 - TCPProxy will be remained as Daemon Application. and It will be going to be React Web App named as 'Porta' on GitHub at almost last of May.</del>
 - July 18, 2021 - Porta would be launching in some future months. It's too delayed up and it's because of hard and tough thing that I faced. All things of this about it is responsibility of author. I am very sorry for this. Util latest dev capture is below.  
 
-![capture](./image/porta-capture.PNG) 
+![capture](./image/porta-capture.PNG)  
+
 Porta link: https://github.com/9ins/porta
 
 ## Instroduction
