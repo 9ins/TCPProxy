@@ -1,7 +1,7 @@
 org/chaostocosmos/net/tcpproxy/Collectors.java
  org.chaostocosmos.net.tcpproxy.Collectors
-TCPProxy/LibraryTest.java
- TCPProxy.LibraryTest
+org/chaostocosmos/net/tcpproxy/testTCPProxy.java
+ org.chaostocosmos.net.tcpproxy.testTCPProxy
 org/chaostocosmos/net/tcpproxy/ProxySessionTest.java
  org.chaostocosmos.net.tcpproxy.ProxySessionTest
 org/chaostocosmos/net/tcpproxy/testProxySession.java
@@ -12,9 +12,5 @@ org/chaostocosmos/net/tcpproxy/testDBSession.java
 org/chaostocosmos/net/tcpproxy/DBSessionTest.java
  org.chaostocosmos.net.tcpproxy.DBSessionTest
  org.chaostocosmos.net.tcpproxy.DBSessionTest$SelectQueryTask
-TCPProxy2/LibraryTest.java
- TCPProxy2.LibraryTest
 org/chaostocosmos/net/tcpproxy/TCPProxyTest.java
  org.chaostocosmos.net.tcpproxy.TCPProxyTest
-org/chaostocosmos/net/tcpproxy/testTCPProxy.java
- org.chaostocosmos.net.tcpproxy.testTCPProxy

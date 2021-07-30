@@ -13,8 +13,6 @@ org/chaostocosmos/net/tcpproxy/ProxySession.java
  org.chaostocosmos.net.tcpproxy.ProxySession$1
  org.chaostocosmos.net.tcpproxy.ProxySession$InteractiveChannel
  org.chaostocosmos.net.tcpproxy.ProxySession$SessionTask
-TCPProxy2/Library.java
- TCPProxy2.Library
 org/chaostocosmos/net/tcpproxy/Config.java
  org.chaostocosmos.net.tcpproxy.Config
 org/chaostocosmos/net/tcpproxy/SessionMapping.java
@@ -27,8 +25,6 @@ org/chaostocosmos/net/tcpproxy/ProxySessionHandler.java
  org.chaostocosmos.net.tcpproxy.ProxySessionHandler
 org/chaostocosmos/net/tcpproxy/ProxyThreadPoolExceptionHandler.java
  org.chaostocosmos.net.tcpproxy.ProxyThreadPoolExceptionHandler
-TCPProxy/Library.java
- TCPProxy.Library
 org/chaostocosmos/net/tcpproxy/config/ConfigException.java
  org.chaostocosmos.net.tcpproxy.config.ConfigException
 org/chaostocosmos/net/tcpproxy/Solution.java
