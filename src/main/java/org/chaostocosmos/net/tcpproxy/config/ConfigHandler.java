@@ -126,12 +126,6 @@ public class ConfigHandler {
 	 * @param config
 	 */
 	public void verifyConfig(Config config) {
-		if(config.getManagementPort() == 0) {
-			throw new IllegalArgumentException("Can't use the specified port for management port: "+config.getManagementPort());
-		}
-		if(config.getManagementAddress() == null) {
-			throw new IllegalArgumentException("Management address not specified in config.yml. Please check it.");
-		}
 		for(Entry<String, SessionMapping> entry : config.getSessionMapping().entrySet()) {			
 			if(entry.getValue().getRemoteHosts() == null) {
 				throw new IllegalArgumentException("Remote target host not specified in config.yml. Please check session part: "+entry.getKey());

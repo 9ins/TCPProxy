@@ -11,7 +11,6 @@ import java.util.Map;
 
 import org.chaostocosmos.net.tcpproxy.config.ConfigHandler;
 import org.chaostocosmos.net.tcpproxy.credential.CredentialsHandler;
-import org.chaostocosmos.net.tcpproxy.managmenet.ManagementServer;
 
 /**
  * TCPProxy : TCP Proxy
@@ -39,7 +38,6 @@ public class TCPProxy implements AdminCommandListener {
 	public static Path configPath;
 	public static Path credentialPath;
 
-	ManagementServer managementServer;
 	ConfigHandler configHandler;
 	CredentialsHandler credentialsHandler;
 	boolean isDone = false;
@@ -74,9 +72,6 @@ public class TCPProxy implements AdminCommandListener {
 														);
 		this.sessionHandler = new ProxySessionHandler(this.configHandler, this.proxyThreadPool);
 		this.sessionMap = this.sessionHandler.getProxySessionMap();
-		if(this.configHandler.getConfig().getManagementActivation()) {
-			//this.managementServer = new ManagementServer(this, this.configHandler, this.credentialsHandler);
-		}
 	}
 	
 	/**

@@ -8,9 +8,6 @@ import java.util.Map;
 
 public class Config implements Serializable {
 	
-	boolean managementActivation;
-	private String managementAddress;
-	private int managementPort;
 	private String credentialPath;
 	private int proxyThreadPoolCoreSize;
 	private int proxyThreadPoolMaxSize;
@@ -22,24 +19,6 @@ public class Config implements Serializable {
 	
 	Config() {}
 
-	public boolean getManagementActivation() {
-		return this.managementActivation;
-	}
-	public void setManagementActivation(boolean managementActivation) {
-		this.managementActivation = managementActivation;
-	}
-	public String getManagementAddress() {
-		return this.managementAddress;
-	}
-	public void setManagementAddress(String managementAddress) {
-		this.managementAddress = managementAddress;
-	}
-	public int getManagementPort() {
-		return this.managementPort;
-	}
-	public void setManagementPort(int managementPort) {
-		this.managementPort = managementPort;
-	}
 	public String getCredentialPath() {
 		return this.credentialPath;
 	}
@@ -89,9 +68,6 @@ public class Config implements Serializable {
 	@Override
 	public String toString() {
 		return "{" +
-			" managementActivation='" + managementActivation + "'" +
-			", managementAddress='" + managementAddress + "'" +
-			", managementPort='" + managementPort + "'" +
 			", credentialPath='" + credentialPath + "'" +
 			", proxyThreadPoolCoreSize='" + proxyThreadPoolCoreSize + "'" +
 			", proxyThreadPoolMaxSize='" + proxyThreadPoolMaxSize + "'" +

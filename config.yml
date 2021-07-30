@@ -1,6 +1,3 @@
-managementActivation: true
-managementAddress: localhost
-managementPort: 3232
 credentialPath: ./credentials.yml
 proxyThreadPoolCoreSize: 10
 proxyThreadPoolMaxSize: 50
