@@ -9,7 +9,7 @@ import org.chaostocosmos.net.tcpproxy.config.Config;
  * @author 9ins 2020. 11. 18.
  */
 public class AdminCommand {
-	
+	  
 	String adminUser;
 	String adminPassword;
 	boolean restartProxy;

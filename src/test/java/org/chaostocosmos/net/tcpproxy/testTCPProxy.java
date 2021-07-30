@@ -9,7 +9,7 @@ public class testTCPProxy {
 
     @Before
     public void before_test() {
-        this.configPath = "D:\\Projects\\TCPProxy\\config.yml";
+        this.configPath = "D:\\Github\\TCPProxy\\config.yml";
     }
     
     @Test

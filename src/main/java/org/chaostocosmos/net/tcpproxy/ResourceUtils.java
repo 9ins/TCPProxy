@@ -5,8 +5,6 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
 
-import org.eclipse.jetty.util.resource.Resource;
-
 /**
  * 
  * ResourceUtils
@@ -23,9 +21,5 @@ public class ResourceUtils {
             throw new RuntimeException("Unable to find " + resourceName);
         }
         return f.toURI();
-    }
-    
-    public static Resource findKeyStore() throws URISyntaxException, MalformedURLException {
-        return Resource.newResource(findClassLoaderResource("ssl/keystore"));
     }
 }
