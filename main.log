@@ -8356,3 +8356,22 @@
 [INFO][Thread:834][20210730171653] [kafka] [Session type: STAND_ALONE] Proxy server waiting [Port] : 8092   Target: [192.168.1.152:8092]
 [INFO][Thread:834][20210730171653] [mysql] [Session type: LOAD_BALANCE_ROUND_ROBIN] Proxy server waiting [Port] : 9336   Target: [192.168.1.157:9336, 192.168.1.157:9336, 192.168.1.157:9336]
 [INFO][Thread:834][20210730171653] [oracle] [Session type: STAND_ALONE] Proxy server waiting [Port] : 1521   Target: [192.168.1.157:1521]
+[INFO][Thread:834][20210730171928] 
+
+ _____  _____ ______  ______                           
+|_   _|/  __ \| ___ \ | ___ \                          
+  | |  | /  \/| |_/ / | |_/ / _ __   ___  __  __ _   _ 
+  | |  | |    |  __/  |  __/ | '__| / _ \ \ \/ /| | | |
+  | |  | \__/\| |     | |    | |   | (_) | >  < | |_| |
+  \_/   \____/\_|     \_|    |_|    \___/ /_/\_\ \__, |
+                                                  __/ |
+                                                 |___/ 
+
+                                       Writen by 9ins.    
+
+[INFO][Thread:834][20210730171928] [Config] Configuration loaded from: D:\Github\TCPProxy\config.yml
+[INFO][Thread:834][20210730171928] [Thread-Pool] Thread Pool initialized. Core size: 10 Max size: 50 Idle size: 600 Waiting Queue size: 30
+[INFO][Thread:834][20210730171928] Start TCP Proxy... Local Host : KOOIN/192.168.35.135
+[INFO][Thread:834][20210730171928] [mysql] [Session type: LOAD_BALANCE_ROUND_ROBIN] Proxy server waiting [Port] : 9336   Target: [192.168.1.157:9336, 192.168.1.157:9336, 192.168.1.157:9336]
+[INFO][Thread:834][20210730171928] [kafka] [Session type: STAND_ALONE] Proxy server waiting [Port] : 8092   Target: [192.168.1.152:8092]
+[INFO][Thread:834][20210730171928] [oracle] [Session type: STAND_ALONE] Proxy server waiting [Port] : 1521   Target: [192.168.1.157:1521]
